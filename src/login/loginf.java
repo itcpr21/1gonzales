@@ -5,6 +5,7 @@
  */
 package login;
 
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static myconnector.connectors.conUrl;
@@ -46,7 +47,7 @@ public class loginf extends javax.swing.JFrame {
         usern = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        pword = new javax.swing.JTextField();
+        pword = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
         uname = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -89,17 +90,13 @@ public class loginf extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
-                .addGroup(registerfLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pword, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(registerfLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(firstn, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lastn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(usern, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(registerfLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(firstn, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(lastn, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(usern, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                    .addComponent(jButton3)
+                    .addComponent(pword))
                 .addContainerGap(180, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, registerfLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(147, 147, 147))
         );
         registerfLayout.setVerticalGroup(
             registerfLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,13 +116,13 @@ public class loginf extends javax.swing.JFrame {
                 .addGroup(registerfLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(usern, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addGap(11, 11, 11)
+                .addGap(16, 16, 16)
                 .addGroup(registerfLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(pword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pword, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addGap(95, 95, 95))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -238,6 +235,8 @@ public class loginf extends javax.swing.JFrame {
               String name = rs.getString("username");
               
              o.setVisible(true);
+             o.jwelcome.setText("Welcome" + " " +uname.getText());
+             
              this.setVisible(false);
              
           }else{
@@ -271,7 +270,37 @@ public class loginf extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       
+                                       
+        String sFname = firstn.getText();
+        String sLname = lastn.getText();
+        String sUname = usern.getText();
+        String sPass = new String (pword.getPassword());
+        
+        try {
+           Class.forName("com.mysql.jdbc.Driver");
+           String conUrl = "jdbc:mysql://localhost/bsit21activity?"
+                   + "user=root&password=";
+            
+         
+          Connection con =  DriverManager.getConnection(conUrl);
+
+        Statement stmt = con.createStatement();
+        
+        stmt.executeUpdate("INSERT INTO `activityone` (`firstname`, `lastname`, `username`, `password`) "
+        + "VALUES ('"+sFname+"', '"+sLname+"','"+sUname+"',md5('"+sPass+"'));");
+        
+        JOptionPane.showMessageDialog(rootPane, "Successfully saved.");
+        firstn.setText("");
+        lastn.setText("");
+        uname.setText("");
+        
+        } catch (ClassNotFoundException ex) {
+Logger.getLogger(loginf.class.getName()).log(Level.SEVERE, null, ex);
+} catch (SQLException ex) {
+ Logger.getLogger(loginf.class.getName()).log(Level.SEVERE, null, ex);
+  }
+   
+   
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -322,7 +351,7 @@ public class loginf extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField lastn;
     private javax.swing.JPasswordField passw;
-    private javax.swing.JTextField pword;
+    private javax.swing.JPasswordField pword;
     private javax.swing.JDialog registerf;
     private javax.swing.JTextField uname;
     private javax.swing.JTextField usern;
