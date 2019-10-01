@@ -97,9 +97,9 @@ public class maintable extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
-        addprodukto.setMaximumSize(new java.awt.Dimension(500, 500));
         addprodukto.setMinimumSize(new java.awt.Dimension(500, 500));
 
         jLabel1.setText("Brand Name:");
@@ -218,21 +218,32 @@ public class maintable extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("DELETE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jButton1)
-                .addContainerGap(375, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addComponent(jButton3)
+                .addContainerGap(316, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(jPanel2);
@@ -256,7 +267,7 @@ public class maintable extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                .addComponent(jSplitPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -303,6 +314,29 @@ public class maintable extends javax.swing.JFrame {
             refresh();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
     }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+  Product product_obj = new Product();
+        int r = tableproduct.getSelectedRow();
+        
+        if(r == -1){
+            JOptionPane.showMessageDialog(rootPane, "Please select a row","Warning",JOptionPane.WARNING_MESSAGE);
+        }else{
+            Object id = tableproduct.getValueAt(r, 0);
+            Object product_name = tableproduct.getValueAt(r, 1);
+            int c = JOptionPane.showConfirmDialog(rootPane, "This will delete "+product_name+".\nClick OK to continue","Confirm Delete",JOptionPane.OK_CANCEL_OPTION);
+            
+            if(c==JOptionPane.OK_OPTION){
+                int cc = JOptionPane.showConfirmDialog(rootPane, "Are you sure you want to delete "+product_name+"?", "Delete", JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+                if(cc == JOptionPane.YES_OPTION){
+                    int re = product_obj.deleteProduct(id);
+                    if(re == 1){
+                        JOptionPane.showMessageDialog(rootPane, "Product "+product_name+" deleted!","Product Deleted",JOptionPane.WARNING_MESSAGE);
+                        refresh();
+                    }
+                }
+            }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+    }   
     /**
      * @param args the command line arguments
      */
@@ -343,6 +377,7 @@ public class maintable extends javax.swing.JFrame {
     private javax.swing.JFrame addprodukto;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

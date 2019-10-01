@@ -50,4 +50,32 @@ public class Product {
         }
         return r;
    }
+    
+     public int deleteProduct(Object id){
+        int r = 0;
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+              Connection con =DriverManager.getConnection(conUrl);
+            
+            String sql = "DELETE FROM product WHERE id = ?;";
+            PreparedStatement p = con.prepareStatement(sql);
+           
+            
+            int newid = Integer.parseInt(id.toString());
+            
+            p.setInt(1, newid);
+            
+            r = p.executeUpdate();
+            //System.out.println(pstmt);
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return r;
+    }
 }
+
