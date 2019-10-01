@@ -12,4 +12,10 @@ package myconnector;
 public class connectors {
       public static String conUrl= "jdbc:mysql://localhost/bsit21activity?"
     + "user=root&password=";
-}
+    private String conURL;
+      
+      
+
+ }
+
+
