@@ -66,6 +66,37 @@ public class maintable extends javax.swing.JFrame {
             Logger.getLogger(maintable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+ 
+ 
+ 
+   final void search(String keyword) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");        
+         Connection con =  DriverManager.getConnection(conUrl);
+
+            String sql = "SELECT * FROM product WHERE id LIKE ? OR brand LIKE ? ";
+            PreparedStatement pstmt = (PreparedStatement) con.prepareStatement(sql);
+
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            DefaultTableModel model = (DefaultTableModel) tableproduct.getModel();
+            model.setRowCount(0);
+            while (rs.next()) {
+                model.addRow(new Object[]{rs.getString("id"), rs.getString("brand"), rs.getString("model"), rs.getString("unit"), rs.getString("quantity"), rs.getString("price")});
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(maintable.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(maintable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+ 
+ 
+ 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,6 +130,8 @@ public class maintable extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        keywordsearch = new javax.swing.JTextField();
+        searchbtn = new javax.swing.JButton();
 
         addprodukto.setMinimumSize(new java.awt.Dimension(500, 500));
 
@@ -156,7 +189,7 @@ public class maintable extends javax.swing.JFrame {
                 .addContainerGap(102, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addproduktoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(143, 143, 143))
         );
         addproduktoLayout.setVerticalGroup(
@@ -231,9 +264,9 @@ public class maintable extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -241,9 +274,9 @@ public class maintable extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jButton1)
-                .addGap(36, 36, 36)
+                .addGap(18, 18, 18)
                 .addComponent(jButton3)
-                .addContainerGap(316, Short.MAX_VALUE))
+                .addContainerGap(333, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(jPanel2);
@@ -256,26 +289,48 @@ public class maintable extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 436, Short.MAX_VALUE)
+            .addGap(0, 435, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
+
+        keywordsearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                keywordsearchKeyReleased(evt);
+            }
+        });
+
+        searchbtn.setText("SEARCH");
+        searchbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchbtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSplitPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(keywordsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(keywordsearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchbtn))
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSplitPane1)
                     .addGroup(layout.createSequentialGroup()
@@ -334,12 +389,22 @@ public class maintable extends javax.swing.JFrame {
                         refresh();
                     }
                 }
-            }        // TODO add your handling code here:
+            }  
+        }// TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
-    }   
-    /**
-     * @param args the command line arguments
-     */
+
+    private void searchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbtnActionPerformed
+          // TODO add your handling code here:
+        String keyword = keywordsearch.getText();
+        this.search(keyword);
+    }//GEN-LAST:event_searchbtnActionPerformed
+
+    private void keywordsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keywordsearchKeyReleased
+        // TODO add your handling code here:
+          String keyword = keywordsearch.getText();
+        this.search(keyword);
+    }//GEN-LAST:event_keywordsearchKeyReleased
+       
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -387,11 +452,13 @@ public class maintable extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextField keywordsearch;
     private javax.swing.JTextField pbname;
     private javax.swing.JTextField pmodel;
     private javax.swing.JFormattedTextField pprice;
     private javax.swing.JSpinner pquan;
     private javax.swing.JTextField punit;
+    private javax.swing.JButton searchbtn;
     private javax.swing.JTable tableproduct;
     // End of variables declaration//GEN-END:variables
 //To change body of generated methods, choose Tools | Templates.
